@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/ruby
 require 'rubygems'
 require 'xml'
 require 'erb'
@@ -7,11 +7,21 @@ require "#{ENV['TM_BUNDLE_SUPPORT']}/phpunit.rb"
 
 file = ENV['TM_FILENAME']
 dir = PHPUnit::Processor.is_remote? ? ENV['TM_DIRECTORY'].gsub(/#{ENV['LOCAL_PATH']}/,ENV["REMOTE_PATH"]) : ENV['TM_DIRECTORY']
-cmd = "cd #{dir}; phpunit --log-xml /tmp/#{file}.xml #{file} > /dev/null; cat /tmp/#{file}.xml; rm /tmp/#{file}.xml"
+
+generate = "cd #{dir}; phpunit --log-junit /tmp/#{file}.xml #{file};"
+cmd = "cat /tmp/#{file}.xml; rm /tmp/#{file}.xml"
+if PHPUnit::Processor.is_remote? 
+  text = `ssh #{ENV['REMOTE_HOST']} "#{generate}"`
+else
+  text = `#{generate}`
+end
+
 if PHPUnit::Processor.is_remote? 
   output = `ssh #{ENV['REMOTE_HOST']} "#{cmd}"`
 else
   output = `#{cmd}`
 end
+#puts output
+
 results = PHPUnit::Processor.xml(output)
 puts ERB.new(File.read("#{ENV['TM_BUNDLE_SUPPORT']}/results.html.erb")).result(binding)

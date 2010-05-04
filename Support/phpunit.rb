@@ -12,7 +12,8 @@ module PHPUnit
 
         results[:parent][:counts] = {}
         results[:parent][:counts][:fail] = master.attributes.get_attribute('failures').value.to_i
-        results[:parent][:counts][:pass] = master.attributes.get_attribute('tests').value.to_i - results[:parent][:counts][:fail]
+        results[:parent][:counts][:error] = master.attributes.get_attribute('errors').value.to_i
+        results[:parent][:counts][:pass] = master.attributes.get_attribute('tests').value.to_i - results[:parent][:counts][:fail] - results[:parent][:counts][:error]
         results[:parent][:counts][:assertions] = master.attributes.get_attribute('tests').value.to_i
         results[:parent][:status] = results[:parent][:counts][:fail] > 0 ? 'fail' : 'pass'
         results[:parent][:total_time] = master.attributes.get_attribute('time').value.to_f
@@ -44,8 +45,8 @@ module PHPUnit
           testcase[:status] = 'pass'
           if tc.children?
             testcase[:status] = 'fail' 
-            testcase[:message] = tc.find_first('failure/text()').content.gsub(/^\n/, '').gsub(/^\s+\w/, '').escape_html.gsub(/<br>/, '').add_code_links
-            testcase[:message] = tc.find_first('failure/text()').content.gsub(/^\n/, '').gsub(/^\s+\w/, '').gsub(/^.+#{ENV['REMOTE_PATH']}/, ENV['LOCAL_PATH']).escape_html.gsub(/<br>/, '').add_code_links if self.is_remote?
+            testcase[:message] = tc.find_first('failure/text() | error/text()').content.gsub(/^\n/, '').gsub(/^\s+\w/, '').escape_html.gsub(/<br>/, '').add_code_links
+            testcase[:message] = tc.find_first('failure/text() | failure/text()').content.gsub(/^\n/, '').gsub(/^\s+\w/, '').gsub(/^.+#{ENV['REMOTE_PATH']}/, ENV['LOCAL_PATH']).escape_html.gsub(/<br>/, '').add_code_links if self.is_remote?
           end
           testsuite[:cases] << testcase
         end

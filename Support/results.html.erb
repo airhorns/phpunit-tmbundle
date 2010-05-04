@@ -38,7 +38,8 @@
             <div class="summary">
                 <ul>
                     <% if results[:parent][:counts][:fail] > 0 %><li><%= results[:parent][:counts][:fail] %> Fail</li><% end %>
-                    <% if results[:parent][:counts][:pass] > 0 %><li><%= results[:parent][:counts][:pass] %> Pass</li><% end %>
+                    <% if results[:parent][:counts][:pass] >= 0 %><li><%= results[:parent][:counts][:pass] %> Pass</li><% end %>
+                    <% if results[:parent][:counts][:error] > 0 %><li><%= results[:parent][:counts][:error] %> Errors</li><% end %>
                     <% if results[:parent][:counts][:assertions] > 0 %><li><%= results[:parent][:counts][:assertions] %> Assertions</li><% end %>
                     <li>Total time: <%= results[:parent][:total_time] %> sec</li>
                 </ul>

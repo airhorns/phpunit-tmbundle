@@ -18,7 +18,7 @@ Installation
 To install via Git:
 
 		cd "~/Library/Application Support/TextMate/Bundles/"
-		git clone git://github.com/meritt/phpunit-tmbundle.git "PHPUnit.tmbundle"
+		git clone git://github.com/hornairs/phpunit-tmbundle.git "PHPUnit.tmbundle"
 		osascript -e 'tell app "TextMate" to reload bundles'
 
 Either way, restart TextMate or select "Reload Bundles" from the Bundles >> Bundle Editor menu.
@@ -29,3 +29,4 @@ Authors
 * Alexey Simonenko, dwarfman@gmail.com
 * Jeremy Lightsmith, jeremy.lightsmith@gmail.com
 * Steve Webster, spjwebster@gmail.com
+* Harry Brundage, harry@skylightlabs.ca
